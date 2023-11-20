@@ -49,6 +49,7 @@ export function LoginForm() {
                   Email address
                 </label>
                 <input
+                  data-testid='email'
                   id='email-address'
                   name='email'
                   type='email'
@@ -65,6 +66,7 @@ export function LoginForm() {
                   Password
                 </label>
                 <input
+                  data-testid='password'
                   id='password'
                   name='password'
                   type='password'
@@ -79,6 +81,7 @@ export function LoginForm() {
             </div>
             <div className='flex justify-center'>
               <Button 
+                testId='submitBtn'
                 backgroundColor='tertiary-100' 
                 name='Sign In'
                 disabled={

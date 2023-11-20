@@ -16,8 +16,10 @@ const client = new Client({
 });
 
 client.connect((err) => {
-	if (err) throw new Error((mesage = err));
-
+	if (err) {
+		let message = 'Database connection error';
+		throw new Error((message = err));
+	}
 	console.log(`Database successfully connected with db ${database_name}`);
 });
 

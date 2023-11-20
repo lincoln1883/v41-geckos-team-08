@@ -12,6 +12,7 @@ export const UserProfile = () => {
 
   const { auth, jobs, proposals } = useSelector((state) => state);
 
+  console.log(jobs);
   console.log(proposals);
 
   const [buttonAClicked, setButtonAClicked] = useState(true);
@@ -35,6 +36,7 @@ export const UserProfile = () => {
           <div className='py-0 grow-0 shrink-0 basis-auto w-full'>
             <div className='flex gap-5 justify-center sm:justify-end mt-4 sm:mr-4'>
               <Button
+                testId='leftBtn'
                 type='submit'
                 value={buttonAClicked}
                 name={auth.data.is_supplier ? 'Jobs Taken' : 'Jobs Posted'}
@@ -45,6 +47,7 @@ export const UserProfile = () => {
                 disabled={buttonAClicked}
               />
               <Button
+                testId='rightBtn'
                 type='submit'
                 value={buttonBClicked}
                 name={
@@ -58,7 +61,7 @@ export const UserProfile = () => {
               />
             </div>
             <div className='flex flex-col justify-center items-center py-12 gap-12 '>
-              <h1 className='text-xl font-bold mb-5 text-center text-black'>
+              <h1 data-testid='jobsHeading' className='text-xl font-bold mb-5 text-center text-black'>
                 {buttonAClicked
                   ? auth.data.is_supplier
                     ? 'Jobs Taken'
@@ -69,25 +72,26 @@ export const UserProfile = () => {
               </h1>
               {buttonAClicked &&
                 !auth.data.is_supplier &&
-                jobs[0].jobs_posted.length === 0 && <h3 className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs posted.</h3>}
+                jobs[0].jobs_posted.length === 0 && <h3 data-testid='noJobs' className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs posted.</h3>}
               {buttonAClicked &&
                 auth.data.is_supplier &&
-                proposals[0].jobs_taken.length === 0 && <h3 className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs picked up.</h3>}
+                proposals[0].jobs_taken.length === 0 && <h3 data-testid='noJobs' className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs picked up.</h3>}
               {buttonBClicked &&
                 !auth.data.is_supplier &&
-                jobs[0].jobs_in_progress.length === 0 && <h3 className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs in progress.</h3>}
+                jobs[0].jobs_in_progress.length === 0 && <h3 data-testid='noJobs' className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs in progress.</h3>}
               {buttonBClicked &&
                 auth.data.is_supplier &&
-                proposals[0].jobs_pending.length === 0 && <h3 className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs waiting to be picked up.</h3>}
+                proposals[0].jobs_pending.length === 0 && <h3 data-testid='noJobs' className='font-bold bg-tertiary-100 rounded p-4 shadow-customShadow text-center w-11/12'>Sorry, you don't have any jobs waiting to be picked up.</h3>}
               {/* I'm gonna have to add logic later differentiating between Jobs Posted and Jobs Picked Up by Suppliers */}
               {buttonAClicked &&
                 !auth.data.is_supplier &&
                 jobs.length > 0 &&
-                jobs[0].jobs_posted.map((job) => {
+                jobs[0].jobs_posted.map((job, index) => {
                   return (
                     <JobCard
                       key={job.uuid}
                       jobUUID={job.uuid}
+                      testIndex={index}
                       name={job.customer.name}
                       description={job.description}
                       trade={job.trade.description}
@@ -101,11 +105,12 @@ export const UserProfile = () => {
               {buttonAClicked &&
                 auth.data.is_supplier &&
                 proposals.length > 0 &&
-                proposals[0].jobs_taken.map((proposal) => {
+                proposals[0].jobs_taken.map((proposal, index) => {
                   return (
                     <JobCard
                       key={proposal.job.uuid}
                       jobUUID={proposal.job.uuid}
+                      testIndex={index}
                       name={proposal.customer.name}
                       description={proposal.job.description}
                       trade={proposal.trade.description}
@@ -117,11 +122,12 @@ export const UserProfile = () => {
               {buttonBClicked &&
                 auth.data.is_supplier &&
                 proposals.length > 0 &&
-                proposals[0].jobs_pending.map((proposal) => {
+                proposals[0].jobs_pending.map((proposal, index) => {
                   return (
                     <JobCard
                       key={proposal.job.uuid}
                       jobUUID={proposal.job.uuid}
+                      testIndex={index}
                       name={proposal.customer.name}
                       description={proposal.job.description}
                       trade={proposal.trade.description}
@@ -134,10 +140,11 @@ export const UserProfile = () => {
               {buttonBClicked &&
                 !auth.data.is_supplier &&
                 jobs.length > 0 &&
-                jobs[0].jobs_in_progress.map((job) => {
+                jobs[0].jobs_in_progress.map((job, index) => {
                   return (
                     <JobCard
                       key={job.uuid}
+                      testIndex={index}
                       name={job.customer.name}
                       description={job.description}
                       trade={job.trade.description}

@@ -37,7 +37,6 @@ export const AvailableJobsPage = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log(cityUUID);
       const { data: res } = await getAPI(`jobs?city=${cityUUID}`, userInfo.token);
       console.log(res);
       const _proposals = proposals[0].jobs_pending.filter(proposal => proposal.city.name.toLowerCase() === cityInput.toLowerCase());
@@ -122,6 +121,7 @@ export const AvailableJobsPage = () => {
                   Country
                 </label>
                 <select
+                  data-testid='countrySelect'
                   value={selectedCountry}
                   onChange={(e) => setSelectedCountry(e.target.value)}
                   className='cursor-pointer w-72'
@@ -150,14 +150,16 @@ export const AvailableJobsPage = () => {
                 <input
                   className={`w-72 ${selectedCountry ? 'opacity-100' : 'opacity-20'}`}
                   type='search'
+                  data-testid='cityInput'
                   value={cityInput}
                   onChange={(e) => setCityInput(e.target.value)}
                   disabled={selectedCountry === ''}
                   maxLength={((cityUUID !== '') || (filteredCities.length === 0 && cityInput !== '')) ? cityInput.length : null}
                 />
-                <ul>
+                <ul data-testid='citiesList'>
                   {filteredCities.map((city) => (
                     <li
+                      data-testid='citySelect'
                       className='cursor-pointer hover:opacity-60 text-black'
                       key={city.uuid}
                       onClick={() => cityInputHandler(city)}
@@ -169,6 +171,7 @@ export const AvailableJobsPage = () => {
         </div>
         <div className='mt-0 ml-2'>
           <Button
+            testId='submitBtn'
             type='submit'
             value='submit'
             backgroundColor='tertiary-100'
@@ -179,18 +182,19 @@ export const AvailableJobsPage = () => {
       </form>
       <div>
         {jobs.length === 0 && noJobs !== '' &&
-          <h1 className='mt-2 text-center font-semibold text-2xl px-4'>Sorry, there are no jobs available in {noJobs}.</h1>
+          <h1 data-testid='noJobs' className='mt-2 text-center font-semibold text-2xl px-4'>Sorry, there are no jobs available in {noJobs}.</h1>
         }
         {jobs.length > 0 && (
-          <h3 className='text-xl px-4 font-bold my-8 text-center text-black'>
+          <h3 data-testid='jobResults' className='text-xl px-4 font-bold my-8 text-center text-black'>
             Showing results for {jobs[0].city.name}
           </h3>
         )}
-        {jobs.map((job) => {
+        {jobs.map((job, index) => {
           return (
             <JobCard
               onClick={() => navigate(`/job/${job.uuid}`)}
               key={job.uuid}
+              testIndex={index}
               name={job.customer.name}
               description={job.description}
               trade={job.trade.description}
